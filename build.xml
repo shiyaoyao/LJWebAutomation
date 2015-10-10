@@ -26,14 +26,7 @@
         </fileset>
         
         <pathelement path="${build.path}"/>
-    </path>     
-
-    <!-- 初始化 -->
-    <target name="init">        
-        <mkdir dir="${build.path}"/>
-        <mkdir dir="${report.path}"/>
-        <mkdir dir="${dist.path}"/>
-    </target>
+    </path>       
     
     <!-- =================================================================== -->
     <!-- 清除历史编译class -->
@@ -43,13 +36,31 @@
         <delete dir="${report.path}"/>
         <delete dir="${dist.path}"/>
     </target>
-
+	
+	<!-- 初始化 -->
+    <target name="init" depends="clean">        
+        <mkdir dir="${build.path}"/>
+        <mkdir dir="${report.path}"/>
+        <mkdir dir="${dist.path}"/>
+    </target>	
+	
     <!-- =================================================================== -->
     <!-- 编译测试文件，初始化目录 -->
     <!-- =================================================================== -->
-    <target name="compile" depends="init">
-        <javac srcdir="${src.path}" destdir="${build.path}"  classpathref="compile.path" includeantruntime="true" encoding="UTF-8"/>
-        <javac srcdir="${resources.path}" destdir="${build.path}"  classpathref="compile.path" includeantruntime="true" encoding="UTF-8"/>
+	
+	<target name="copy" depends="init">  
+	   <copy todir="${build.path}">  
+	    <fileset dir="${resources.path}">  
+	     	<include name="**/**" />  
+	    </fileset>
+	   	<fileset dir="${src.path}">  
+     		<include name="com/lianjia/lianjiaweb/*.xml" />  
+    	</fileset>	   	
+	   </copy>  
+	</target>
+	
+    <target name="compile" depends="copy">
+        <javac srcdir="${src.path}" destdir="${build.path}"  classpathref="compile.path" includeantruntime="true" encoding="UTF-8"/>    	
     </target>      
          
     <!-- =================================================================== -->
